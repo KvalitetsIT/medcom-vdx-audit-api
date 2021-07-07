@@ -51,7 +51,7 @@ public class AuditClientImplTest{
     public void testAuditEventValidationError() throws IOException, InterruptedException, TimeoutException {
         var input = new AuditEvent<String>();
 
-        Exception exception = assertThrows(Exception.class, () -> auditClient.addAuditEntry(input));
+        assertThrows(AuditValidationException.class, () -> auditClient.addAuditEntry(input));
         Mockito.verify(eventPublisher, never()).publishMessage(Mockito.any());
     }
 }
