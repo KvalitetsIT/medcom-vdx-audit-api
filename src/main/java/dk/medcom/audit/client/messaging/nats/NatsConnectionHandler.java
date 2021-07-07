@@ -59,7 +59,8 @@ public class NatsConnectionHandler {
 
             Connection natsConnection = streamingConnection.getNatsConnection();
 
-            if (natsConnection.getStatus() != Connection.Status.CONNECTED) {
+            if (natsConnection == null || natsConnection.getStatus() != Connection.Status.CONNECTED) {
+                logger.debug("Status not connected. No need to close connection.");
                 return;
             }
 
