@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class NatsConnectionHandler {
@@ -27,7 +28,7 @@ public class NatsConnectionHandler {
     private final ErrorListener errorListener;
 
     private final List<Consumer<Void>> reconnectListeners = new ArrayList<>();
-    private boolean shuttingDown;
+    private final AtomicBoolean shuttingDown = new AtomicBoolean(false);
 
     public NatsConnectionHandler(String natsUrl, String clusterId, String clientId) {
         this.natsUrl = natsUrl;
@@ -53,8 +54,8 @@ public class NatsConnectionHandler {
 
     public void close() {
         if (streamingConnection != null) {
+            shuttingDown.set(true);
             logger.debug("Closing NATS connection");
-            shuttingDown = true;
 
             Connection natsConnection = streamingConnection.getNatsConnection();
 
@@ -78,7 +79,7 @@ public class NatsConnectionHandler {
     }
 
     public boolean isShuttingDown() {
-        return shuttingDown;
+        return shuttingDown.get();
     }
 
     public StreamingConnection getConnection() {

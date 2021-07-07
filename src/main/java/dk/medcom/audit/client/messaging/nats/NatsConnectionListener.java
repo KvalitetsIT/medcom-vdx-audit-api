@@ -45,7 +45,7 @@ public class NatsConnectionListener implements ConnectionListener {
     private void reConnectNats(Connection connection) {
         logger.info("Connection lost to NATS. Will try to create now connection.");
 
-        if(!natsConnectionHandler.isShuttingDown()) {
+        if(natsConnectionHandler.isShuttingDown()) {
             logger.info("Shutting down. Skipping reconnect to nats.");
             return;
         }
@@ -65,9 +65,9 @@ public class NatsConnectionListener implements ConnectionListener {
             }
 
             try {
-                Thread.sleep(5000); //TODO er der en bedre måde at vente x tid?
+                Thread.sleep(5000);
             } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
+                logger.debug("Interrupted during wait for reconnect.", interruptedException);
             }
         }
     }
