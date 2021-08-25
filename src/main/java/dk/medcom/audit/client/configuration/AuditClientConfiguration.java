@@ -27,18 +27,18 @@ public class AuditClientConfiguration {
     @Bean
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = "audit.nats.disabled", havingValue = "false", matchIfMissing = true)
-    public NatsHealthIndicator producerNatsHealthIndicator(NatsConnectionHandler natsConnectionHandler) {
+    public NatsHealthIndicator auditProducerNatsHealthIndicator(NatsConnectionHandler auditNatsProducerConnectionHandler) {
         logger.info("Creating NatsHealthIndicator.");
-        return new NatsHealthIndicator(natsConnectionHandler);
+        return new NatsHealthIndicator(auditNatsProducerConnectionHandler);
     }
 
     @Bean
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = "audit.nats.disabled", havingValue = "false", matchIfMissing = true)
-    public NatsConnectionHandler natsProducerConnectionHandler(@Value("${audit.nats.cluster.id}") String clusterId, @Value("${audit.nats.client.id}") String clientId, @Value("${audit.nats.url}") String natsUrl) throws IOException, InterruptedException {
-        logger.info("Connecting to nats at {} using client id {} and cluster id {}.", natsUrl, clientId + "-producer", clusterId);
+    public NatsConnectionHandler auditNatsProducerConnectionHandler(@Value("${audit.nats.cluster.id}") String clusterId, @Value("${audit.nats.client.id}") String clientId, @Value("${audit.nats.url}") String natsUrl) throws IOException, InterruptedException {
+        logger.info("Connecting to nats at {} using client id {} and cluster id {}.", natsUrl, clientId + "-audit-producer", clusterId);
 
-        producerConnectionHandler = new NatsConnectionHandler(natsUrl, clusterId, clientId);
+        producerConnectionHandler = new NatsConnectionHandler(natsUrl, clusterId, clientId + "-audit-producer");
         producerConnectionHandler.connect();
 
         return producerConnectionHandler;
@@ -47,17 +47,17 @@ public class AuditClientConfiguration {
     @Bean
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = "audit.nats.disabled", havingValue = "false", matchIfMissing = true)
-    public NatsPublisher natsPublisher(NatsConnectionHandler streamingConnection, @Value("${audit.nats.subject}") String subject) {
+    public NatsPublisher auditNatsPublisher(NatsConnectionHandler auditNatsProducerConnectionHandler, @Value("${audit.nats.subject}") String subject) {
         logger.info("Creating NATS publisher.");
-        return new NatsPublisher(streamingConnection, subject);
+        return new NatsPublisher(auditNatsProducerConnectionHandler, subject);
     }
 
     @Bean
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = "audit.nats.disabled", havingValue = "false", matchIfMissing = true)
-    public AuditClient auditClient(NatsPublisher publisher) {
+    public AuditClient auditClient(NatsPublisher auditNatsPublisher) {
         logger.info("Creating AuditClient.");
-        return new AuditClientImpl(publisher);
+        return new AuditClientImpl(auditNatsPublisher);
     }
 
     @Bean
