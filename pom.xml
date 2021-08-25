@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dk.medcom</groupId>
 	<artifactId>medcom-audit-api</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -16,7 +16,7 @@
 
 	<scm>
 		<connection>scm:git:git@github.com:KvalitetsIT/medcom-vdx-audit-api.git</connection>
-		<tag>HEAD</tag>
+		<tag>v1.0.0</tag>
 	</scm>
 
 	<distributionManagement>
