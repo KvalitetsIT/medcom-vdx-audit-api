@@ -40,6 +40,7 @@ public class NatsConnectionHandler {
     }
 
     public void connect() throws IOException, InterruptedException {
+        logger.info("Creating new connection to NATS.");
         var options = new Options.Builder()
                 .clusterId(clusterId)
                 .clientId(clientId)
@@ -50,6 +51,7 @@ public class NatsConnectionHandler {
 
         StreamingConnectionFactory streamingConnectionFactory = new StreamingConnectionFactory(options);
         streamingConnection = streamingConnectionFactory.createConnection();
+        logger.info("New connection created.");
     }
 
     public void close() {

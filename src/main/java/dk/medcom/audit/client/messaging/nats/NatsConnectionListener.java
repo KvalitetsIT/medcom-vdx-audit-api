@@ -43,7 +43,7 @@ public class NatsConnectionListener implements ConnectionListener {
     }
 
     private void reConnectNats(Connection connection) {
-        logger.info("Connection lost to NATS. Will try to create now connection.");
+        logger.info("Connection lost to NATS. Will try to create new connection.");
 
         if(natsConnectionHandler.isShuttingDown()) {
             logger.info("Shutting down. Skipping reconnect to nats.");
@@ -52,7 +52,9 @@ public class NatsConnectionListener implements ConnectionListener {
 
         try {
             connection.close();
+            logger.info("Existing connection closed.");
         } catch (Exception ignore) {
+            logger.info("Failed closing existing connections. This is OK.");
             // ignore
         }
 
@@ -60,6 +62,7 @@ public class NatsConnectionListener implements ConnectionListener {
             try {
                 natsConnectionHandler.connect();
                 natsConnectionHandler.reconnected();
+                logger.info("Reconnected to NATS.");
             } catch (Exception ex) {
                 logger.warn("Trying to connect to NATS, but failed. Retrying...", ex);
             }
@@ -70,6 +73,8 @@ public class NatsConnectionListener implements ConnectionListener {
                 logger.debug("Interrupted during wait for reconnect.", interruptedException);
             }
         }
+
+        logger.info("Exiting reConnectNats.");
     }
 }
 
