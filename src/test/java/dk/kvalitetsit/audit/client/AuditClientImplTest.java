@@ -1,7 +1,8 @@
-package dk.medcom.audit.client;
+package dk.kvalitetsit.audit.client;
 
-import dk.medcom.audit.client.api.v1.AuditEvent;
-import dk.medcom.audit.client.messaging.nats.NatsPublisher;
+import dk.kvalitetsit.audit.client.api.v1.AuditEvent;
+import dk.kvalitetsit.audit.client.messaging.nats.NatsPublisher;
+import io.nats.client.JetStreamApiException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -26,7 +27,7 @@ public class AuditClientImplTest{
     }
 
     @Test
-    public void testAuditEvent() throws IOException, InterruptedException, TimeoutException {
+    public void testAuditEvent() throws IOException, InterruptedException, TimeoutException, JetStreamApiException {
         var input = new AuditEvent<String>();
         input.setAuditEventDateTime(OffsetDateTime.now());
         input.setIdentifier("id");
@@ -48,7 +49,7 @@ public class AuditClientImplTest{
     }
 
     @Test
-    public void testAuditEventValidationError() throws IOException, InterruptedException, TimeoutException {
+    public void testAuditEventValidationError() throws IOException, JetStreamApiException {
         var input = new AuditEvent<String>();
 
         assertThrows(AuditValidationException.class, () -> auditClient.addAuditEntry(input));

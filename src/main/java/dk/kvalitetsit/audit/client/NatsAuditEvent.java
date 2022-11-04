@@ -1,4 +1,4 @@
-package dk.medcom.audit.client;
+package dk.kvalitetsit.audit.client;
 
 public class NatsAuditEvent<T> {
     private int version;

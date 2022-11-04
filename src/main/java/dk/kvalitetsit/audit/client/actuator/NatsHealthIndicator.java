@@ -1,28 +1,27 @@
-package dk.medcom.audit.client.actuator;
+package dk.kvalitetsit.audit.client.actuator;
 
-import dk.medcom.audit.client.messaging.nats.NatsConnectionHandler;
 import io.nats.client.Connection;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 
 public class NatsHealthIndicator extends AbstractHealthIndicator {
-    private final NatsConnectionHandler natsConnectionHandler;
+    private final Connection natsConnection;
 
-    public NatsHealthIndicator(NatsConnectionHandler natsConnectionHandler){
-        this.natsConnectionHandler = natsConnectionHandler;
+    public NatsHealthIndicator(Connection natsConnection){
+        this.natsConnection = natsConnection;
     }
 
     @Override
     protected void doHealthCheck(Health.Builder builder) {
-        Connection.Status status = natsConnectionHandler.getStatus();
+        Connection.Status status = natsConnection.getStatus();
         if (status == Connection.Status.CONNECTED){
             builder.up()
-                    .withDetail("url", natsConnectionHandler.getConnectedUrl())
+                    .withDetail("url", natsConnection.getConnectedUrl())
                     .withDetail("status", status.toString());
         }
         else {
             builder.down()
-                    .withDetail("url", natsConnectionHandler.getConnectedUrl())
+                    .withDetail("url", natsConnection.getConnectedUrl() == null ? "" : natsConnection.getConnectedUrl())
                     .withDetail("status", status.toString());
         }
     }

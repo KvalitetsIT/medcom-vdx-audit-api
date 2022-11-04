@@ -4,7 +4,12 @@
 Java API for the Medcom Audit Service
 
 Include it in your Spring Boot project and Spring will do its magic to create a bean of type
-dk.medcom.audit.client.AuditClient. Use it in your application to create audit events. 
+dk.kvalitetsit.audit.client.AuditClient. Use it in your application to create audit events. 
+
+## Branches
+
+Main branch maintains a NATS JetStream compatible version while branch v1 maintains a NATS Streaming compatible version.
+
 
 ## Configuration
 
@@ -12,9 +17,7 @@ Below configuration properties can/must be set.
 
 | Environment variable       | Description                                                                                    |           Required  |
 | -------------------------- |------------------------------------------------------------------------------------------------| -----------------------------|
-| audit.nats.cluster.id      | Nats cluster id | Yes, if audit.nats.disabled is not set to true. |
-| audit.nats.client.id       | Nats client id | Yes, if audit.nats.disabled is not set to true. |
-| audit.nats.url             | Nats url to connect to | Yes, if audit.nats.disabled is not set to true. |
+| audit.nats.url             | Nats url to connect to | Yes, if audit.nats.disabled is not set to true. | 
 | audit.nats.subject         | Nats subject to publish to | Yes, if audit.nats.disabled is not set to true. |
 | audit.nats.disabled        | Disable NATS audit integration. Must be true or false. If set to true integration to nats is disabled and audit is debug logged through logging framework. | No |
 
