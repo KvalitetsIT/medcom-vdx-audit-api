@@ -2,6 +2,8 @@ package dk.kvalitetsit.audit.client.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dk.kvalitetsit.audit.client.AuditClient;
 import dk.kvalitetsit.audit.client.AuditClientImpl;
 import dk.kvalitetsit.audit.client.actuator.NatsHealthIndicator;
@@ -67,7 +69,11 @@ public class AuditClientConfiguration {
     public AuditClient nullAuditClient() {
         return auditEvent -> {
             try {
-                logger.debug("Audit event received. Not sending to NATS. Event: {}", new ObjectMapper().writeValueAsString(auditEvent));
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.registerModule(new JavaTimeModule());
+                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                mapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+                logger.debug("Audit event received. Not sending to NATS. Event: {}", mapper.writeValueAsString(auditEvent));
             } catch (JsonProcessingException e) {
                 logger.error("Error", e);
             }
