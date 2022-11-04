@@ -1,4 +1,4 @@
-package dk.medcom.audit.client.api.v1;
+package dk.kvalitetsit.audit.client.api.v1;
 
 import java.time.OffsetDateTime;
 

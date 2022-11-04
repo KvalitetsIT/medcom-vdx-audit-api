@@ -1,6 +1,6 @@
-package dk.medcom.audit.client;
+package dk.kvalitetsit.audit.client;
 
-import dk.medcom.audit.client.api.v1.AuditEvent;
+import dk.kvalitetsit.audit.client.api.v1.AuditEvent;
 import org.apache.commons.lang3.StringUtils;
 
 class AuditEventValidator {
