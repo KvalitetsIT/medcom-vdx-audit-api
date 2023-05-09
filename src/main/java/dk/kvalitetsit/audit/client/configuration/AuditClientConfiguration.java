@@ -22,38 +22,37 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.concurrent.TimeoutException;
 
 @Configuration
 public class AuditClientConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(AuditClientConfiguration.class);
-    private Connection natsConnection;
+    private Connection auditNatsConnection;
 
     @Bean
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = "audit.nats.disabled", havingValue = "false", matchIfMissing = true)
-    public NatsHealthIndicator auditProducerNatsHealthIndicator(Connection auditNatsProducerConnectionHandler) {
+    public NatsHealthIndicator auditProducerNatsHealthIndicator(Connection auditNatsConnection) {
         logger.info("Creating NatsHealthIndicator.");
-        return new NatsHealthIndicator(auditNatsProducerConnectionHandler);
+        return new NatsHealthIndicator(auditNatsConnection);
     }
 
-    @Bean
+    @Bean(initMethod = "")
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = "audit.nats.disabled", havingValue = "false", matchIfMissing = true)
-    public Connection natsConnection(@Value("${audit.nats.url}") String natsUrl) throws IOException, InterruptedException {
+    public Connection auditNatsConnection(@Value("${audit.nats.url}") String natsUrl) throws IOException, InterruptedException {
         logger.info("Connecting to nats at {} using", natsUrl);
 
-        natsConnection = Nats.connect(natsUrl);
+        auditNatsConnection = Nats.connect(natsUrl);
 
-        return natsConnection;
+        return auditNatsConnection;
     }
 
     @Bean
     @ConditionalOnWebApplication
     @ConditionalOnProperty(name = "audit.nats.disabled", havingValue = "false", matchIfMissing = true)
-    public NatsPublisher auditNatsPublisher(Connection natsConnection, @Value("${audit.nats.subject}") String subject) throws IOException {
+    public NatsPublisher auditNatsPublisher(Connection auditNatsConnection, @Value("${audit.nats.subject}") String subject) throws IOException {
         logger.info("Creating NATS publisher.");
-        return new NatsPublisher(natsConnection.jetStream(), subject);
+        return new NatsPublisher(auditNatsConnection.jetStream(), subject);
     }
 
     @Bean
@@ -81,9 +80,9 @@ public class AuditClientConfiguration {
     }
 
     @PreDestroy
-    public void destroy() throws InterruptedException, TimeoutException {
-        if(natsConnection != null) {
-            natsConnection.drain(Duration.ofSeconds(5L));
+    public void destroy() throws Exception {
+        if(auditNatsConnection != null) {
+            auditNatsConnection.drain(Duration.ofSeconds(5L));
         }
     }
 }
