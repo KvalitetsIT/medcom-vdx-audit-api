@@ -10,6 +10,7 @@ import dk.kvalitetsit.audit.client.actuator.NatsHealthIndicator;
 import dk.kvalitetsit.audit.client.messaging.nats.NatsPublisher;
 import io.nats.client.Connection;
 import io.nats.client.Nats;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.time.Duration;
 

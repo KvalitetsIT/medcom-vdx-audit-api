@@ -1,8 +1,8 @@
 package dk.kvalitetsit.audit.client.actuator;
 
 import io.nats.client.Connection;
-import org.springframework.boot.actuate.health.AbstractHealthIndicator;
-import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.health.contributor.AbstractHealthIndicator;
+import org.springframework.boot.health.contributor.Health;
 
 public class NatsHealthIndicator extends AbstractHealthIndicator {
     private final Connection natsConnection;
