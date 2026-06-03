@@ -32,7 +32,7 @@
     </developers>
 
     <properties>
-        <jacoco.version>0.8.4</jacoco.version>
+        <jacoco.version>0.8.12</jacoco.version>
         <revision>0.0.0-SNAPSHOT</revision>
     </properties>
 
