@@ -1,4 +1,4 @@
 #!/bin/sh
 set
 cd /src
-mvn --batch-mode deploy
+mvn --batch-mode deploy -Drevision=$VERSION
