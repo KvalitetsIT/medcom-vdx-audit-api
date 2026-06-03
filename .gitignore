@@ -27,3 +27,4 @@ target
 # IntelliJ stuff
 .idea
 *.iml
+.flattened-pom.xml
